@@ -1,5 +1,6 @@
 // TODO: install mysql2, inquirer, console.table packages, package json & lock.json
 const inquirer = require('inquirer');
+const cTable = require('console.table');
 const db = require('./config/connection');
 const { viewDepartment, viewRoles, viewEmployees, addDepartment } = require('./queries'); 
 
@@ -18,8 +19,14 @@ const promptUser = () => {
             type: 'list',
             name: 'menuChoice',
             message: 'Please select an action',
-            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an Employee', 'Update Employee role']
-
+            choices: [
+            'View all departments', 
+            'View all roles', 
+            'View all employees', 
+            'Add a department', 
+            'Add a role', 
+            'Add an Employee', 
+            'Update Employee role']
         },
     ])
     .then( promptChoice => {
