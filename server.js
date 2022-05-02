@@ -1,8 +1,8 @@
 // TODO: install mysql2, inquirer, console.table packages, package json & lock.json
 const inquirer = require('inquirer');
-const cTable = require('console.table');
 const db = require('./config/connection');
-const { viewDepartment, viewRoles, viewEmployees, addDepartment } = require('./queries'); 
+const cTable = require('console.table');
+//const { viewDepartment, viewRoles, viewEmployees, addDepartment, addRole, addEmployee } = require('./queries'); 
 
 // TODO: make queries asynchronous 
 
@@ -14,7 +14,8 @@ const { viewDepartment, viewRoles, viewEmployees, addDepartment } = require('./q
 
 
 const promptUser = () => {
-    inquirer.prompt([
+    inquirer
+    .prompt([
         {
             type: 'list',
             name: 'menuChoice',
@@ -25,57 +26,163 @@ const promptUser = () => {
             'View all employees', 
             'Add a department', 
             'Add a role', 
-            'Add an Employee', 
-            'Update Employee role']
+            'Add an Employee',
+            'Exit' 
+            ]
         },
     ])
-    .then( promptChoice => {
+    .then((answer) => {
+        switch (answer.menuChoice) {
+            case 'View all departments':
+                viewDepartment()
+                break;
+            case 'View all roles':
+                viewRoles()
+                break;
+            case 'View all employees':
+                viewEmployees()
+                break;
+            case 'Add a department':
+                addDepartment()
+                break;
+            case 'Add a role':
+                addRole()
+                break;
+            case 'Add an Employee':
+                addEmployee()
+                break;
+            case 'Exit':
+                default:
+                break;
 
-        let menuChoice = promptChoice.menuChoice
+        }
+    });
+};
 
-        //departments 
-        if(menuChoice === 'View all departments') {
-            viewDepartment().then(data => {
-                console.log(data);
-            })
-            // let departments = await viewDepartment()
-            // console.log(departments);
-        }
-        // roles 
-        else if (menuChoice === 'View all roles') {
-            viewRoles().then(data => {
-                console.log(data);
-            })
-        }
-        // employees
-        else if (menuChoice === 'View all employees') {
-            viewEmployees().then(data => {
-                console.log(data);
-            })
-        }
-        // add department
-        else if (menuChoice === 'Add a department') {
-            addDepartment().then(data => {
-                console.log(data);
-            })
-        }
-        // add a role 
-        else if (menuChoice === 'Add a role') {
-            viewEmployees().then(data => {
-                console.log(data);
-            })
-        }
-        // add employee
-        else if (menuChoice === 'View all employees') {
-            viewEmployees().then(data => {
-                console.log(data);
-            })
-        }
+// view department
+const viewDepartment = () => {
+    const viewDept = 'SELECT * FROM department';
+    db.query(viewDept, (err, res) => {
+        console.table(res);
+        promptUser();
+    });
+};
+
+// view roles
+const viewRoles = () => {
+    const selectRole = 'SELECT * FROM role';
+    db.query(selectRole, (err, res) => {
+        console.table(res);
+        promptUser();
+    });
+};
+
+// view employees
+const viewEmployees = () => {
+    const viewEmp = 'SELECT * FROM employee';
+    db.query(viewEmp, (err,res) => {
+        console.table(res);
+        promptUser();
+    });
+};
+
+// add department
+const addDepartment = () => {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'deptChoice',
+                message: 'What is the name of the department?'
+            }
+        ])
+        .then((res) => {
+            const deptChoice = res.deptChoice;
+            const deptName = `INSERT INTO department (department_name) VALUES ('${deptChoice}')`;
+            db.query(deptName, (err, res) => {
+                if (err) {
+                    throw err;
+                }
+                console.table(res);
+                promptUser();
+            });
+        });
+};
+
+const addRole = () => {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'title',
+                message: 'Enter Employee Title'
+            },
+            {
+                type: 'input',
+                name: 'salary',
+                message: 'Enter Employee Salary'
+            },
+            {
+                type: 'input',
+                name: 'deptId',
+                message: 'Enter Employees Department ID'
+            }
+        ])
+        .then((res) => {
+            const title = res.title;
+            const salary = res.salary;
+            const deptId = res.deptId;
+            const newRole = `INSERT INTO role (title, salary, department_id) VALUES ('${title}', '${salary}', '${deptId}')`;
+                db.query(newRole, (err, res) => {
+                    if (err) {
+                        throw err;
+                    }
+                    console.table(res);
+                    promptUser();
+                });            
+        });
+};
 
 
-
-    })
-}
+const addEmployee = () => {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'firstName',
+                message: 'What is the first name of the employee?'
+            },
+            {
+                type: 'input',
+                name: 'lastName',
+                message: 'What is the last name of the employee?'
+            },
+            {
+                type: 'input',
+                name: 'empRole',
+                message: 'What is their employee ID?'
+            },
+            {
+                type: 'input',
+                name: 'empMang',
+                message: 'What is their Managers ID?'
+            }
+        ])
+        .then((res) => {
+            const firstName = res.firstName;
+            const lastName = res.lastName;
+            const empRole = res.empRole;
+            const empMang = res.empMang;
+            const newEmployee = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${firstName}', '${lastName}', '${empRole}', '${empMang}')`;
+            db.query(newEmployee, (err, res) => {
+                if (err) {
+                    throw err;
+                }
+                console.table(res);
+                promptUser();
+            });
+        });
+};
 
 
 
@@ -88,4 +195,4 @@ const promptUser = () => {
 
 promptUser();
 
-module.exports = { promptUser };
+//module.exports = { promptUser };
