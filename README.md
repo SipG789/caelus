@@ -15,7 +15,7 @@
   ### Install
   Download folder from my repo, then install inquirer, mysql2 and console.table
   The following is a video showing how this application works. 
-   [![Watch the video](./)]
+   [![Watch the video](./assets/challenge%2012.gif)]
 
   ### Usage
   This application allows a business owner to view employees in a department as well as add employees, roles, and departments. Users are also able to view any department, role or employee. 
