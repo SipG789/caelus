@@ -1,10 +1,9 @@
-// TODO: install mysql2, inquirer, console.table packages, package json & lock.json
+//  install mysql2, inquirer, console.table packages, package json & lock.json
 const inquirer = require('inquirer');
 const db = require('./config/connection');
 const cTable = require('console.table');
-//const { viewDepartment, viewRoles, viewEmployees, addDepartment, addRole, addEmployee } = require('./queries'); 
 
-// TODO: make queries asynchronous 
+ 
 
 //  add tables in a separate file that contains functions for performing specific SQL queries 
 //  include a seeds.sql file to pre-populate databases in order to make individual features easier
@@ -195,4 +194,3 @@ const addEmployee = () => {
 
 promptUser();
 
-//module.exports = { promptUser };
